@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useEffect, useMemo, useState } from 'react';
+import { useLayoutEffect, useMemo, useState } from 'react';
 
 interface Song {
   id: number;
@@ -11,7 +11,7 @@ interface Song {
 function App(): JSX.Element {
   const [data, setData] = useState<Song[] | null>(null);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const getSongs = async () => {
       try {
         const response = await axios.get<Song[]>('https://thing-or-two-v71t.onrender.com/songs');
