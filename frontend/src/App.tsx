@@ -1,66 +1,60 @@
-import axios from 'axios'
-import { useEffect } from 'react'
+import axios from 'axios';
+import { useEffect, useMemo, useState } from 'react';
 
-function App() {
+interface Song {
+  id: number;
+  name: string;
+  band: string;
+  year: number;
+}
+
+function App(): JSX.Element {
+  const [data, setData] = useState<Song[] | null>(null);
 
   useEffect(() => {
     const getSongs = async () => {
       try {
-        const { data } = await axios.get('http://localhost:9000/songs')
-        console.log(data)
+        const response = await axios.get<Song[]>('http://localhost:9000/songs');
+        setData(response.data);
       } catch (error) {
-        console.log("Error: ", error)
+        console.log("Error: ", error);
       }
+    };
+    getSongs();
+  }, []);
+
+  const sortedData: Song[] = useMemo(() => {
+    if (data) {
+      return [...data].sort((a, b) => a.band.localeCompare(b.band));
     }
-    getSongs()
-  }, [])
-
-
-
-
-
+    return [];
+  }, [data]);
 
   return (
     <div className="grid grid-cols-1 grid-rows-[100vh] items-center justify-items-center">
       <div className="overflow-x-auto">
         <table className="table">
-          {/* head */}
           <thead>
             <tr>
-              <th></th>
               <th>Name</th>
               <th>Band</th>
               <th>Year</th>
             </tr>
           </thead>
           <tbody>
-            {/* row 1 */}
-            <tr>
-              <th>1</th>
-              <td>Cy Ganderton</td>
-              <td>Quality Control Specialist</td>
-              <td>Blue</td>
-            </tr>
-            {/* row 2 */}
-            <tr className="hover">
-              <th>2</th>
-              <td>Hart Hagerty</td>
-              <td>Desktop Support Technician</td>
-              <td>Purple</td>
-            </tr>
-            {/* row 3 */}
-            <tr>
-              <th>3</th>
-              <td>Brice Swyre</td>
-              <td>Tax Accountant</td>
-              <td>Red</td>
-            </tr>
+            {sortedData &&
+              sortedData.map((song) => (
+                <tr key={song.id}>
+                  <td>{song.name}</td>
+                  <td>{song.band}</td>
+                  <td>{song.year}</td>
+                </tr>
+              ))}
           </tbody>
         </table>
       </div>
     </div>
-
-  )
+  );
 }
 
-export default App
+export default App;
