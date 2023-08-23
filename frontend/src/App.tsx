@@ -11,6 +11,7 @@ interface Song {
 function App(): JSX.Element {
   const [data, setData] = useState<Song[] | null>(null);
 
+  // Use layout effect to fetch data when the component mounts
   useLayoutEffect(() => {
     const getSongs = async () => {
       try {
@@ -23,6 +24,7 @@ function App(): JSX.Element {
     getSongs();
   }, []);
 
+  // Use memoization to sort the data by band name
   const sortedData: Song[] = useMemo(() => {
     if (data) {
       return [...data].sort((a, b) => a.band.localeCompare(b.band));

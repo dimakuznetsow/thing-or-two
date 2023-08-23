@@ -6,17 +6,17 @@ import { SongsService } from './songs.service';
 export class SongsController {
   constructor(private readonly songsService: SongsService) {}
 
-  @Get()
+  @Get() // Handler for HTTP GET requests
   async getSongs(): Promise<Songs[]> {
     return this.songsService.getSongs();
   }
 
-  @Post()
+  @Post() // Handler for HTTP POST requests
   async createSong(@Body() postData: Songs): Promise<Songs> {
     return this.songsService.createSong(postData);
   }
 
-  @Post('upload-csv')
+  @Post('upload-csv') // Handler for HTTP POST requests at the 'upload-csv' route
   async uploadSongsFromCSV(): Promise<string> {
     try {
       await this.songsService.uploadSongsFromCSV();

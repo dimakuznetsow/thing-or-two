@@ -8,6 +8,7 @@ import * as csv from 'csv-parser';
 export class SongsService {
   constructor(private prisma: PrismaService) {}
 
+  // Retrieve a list of songs from the database
   async getSongs(): Promise<Songs[]> {
     return this.prisma.songs.findMany();
   }
@@ -22,9 +23,11 @@ export class SongsService {
     }
   }
 
+  // Upload songs from a CSV file and store them in the database
   async uploadSongsFromCSV() {
     const results = [];
 
+    // Read the CSV file, parse the data, and process it
     fs.createReadStream('./src/songs/songs.csv')
       .pipe(csv())
       .on('data', (data) => results.push(data))
