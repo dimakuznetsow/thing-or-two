@@ -14,7 +14,7 @@ function App(): JSX.Element {
   useEffect(() => {
     const getSongs = async () => {
       try {
-        const response = await axios.get<Song[]>('http://localhost:9000/songs');
+        const response = await axios.get<Song[]>('https://thing-or-two-v71t.onrender.com/songs');
         setData(response.data);
       } catch (error) {
         console.log("Error: ", error);
