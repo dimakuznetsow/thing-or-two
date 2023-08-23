@@ -10,6 +10,7 @@ interface Song {
 
 function App(): JSX.Element {
   const [data, setData] = useState<Song[] | null>(null);
+  const [isLoading, setIsLoading] = useState(true); // Added loading state
 
   // Use layout effect to fetch data when the component mounts
   useLayoutEffect(() => {
@@ -17,6 +18,7 @@ function App(): JSX.Element {
       try {
         const response = await axios.get<Song[]>('https://thing-or-two-v71t.onrender.com/songs');
         setData(response.data);
+        setIsLoading(false); // Set loading state to false after data is fetched
       } catch (error) {
         console.log("Error: ", error);
       }
@@ -34,27 +36,30 @@ function App(): JSX.Element {
 
   return (
     <div className="grid grid-cols-1 grid-rows-[100vh] items-center justify-items-center">
-      <div className="overflow-x-auto">
-        <table className="table">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Band</th>
-              <th>Year</th>
-            </tr>
-          </thead>
-          <tbody>
-            {sortedData &&
-              sortedData.map((song) => (
+      {isLoading ? ( // Conditional rendering based on loading state
+        <span className="loading loading-spinner text-primary"></span>
+      ) : (
+        <div className="overflow-x-auto">
+          <table className="table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Band</th>
+                <th>Year</th>
+              </tr>
+            </thead>
+            <tbody>
+              {sortedData.map((song) => (
                 <tr key={song.id}>
                   <td>{song.name}</td>
                   <td>{song.band}</td>
                   <td>{song.year}</td>
                 </tr>
               ))}
-          </tbody>
-        </table>
-      </div>
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
   );
 }
